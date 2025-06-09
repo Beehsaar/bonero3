@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arkadaşlık Sitesi - Kayıt</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f2f2f2;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 15px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Kayıt Ol / Profil Güncelle</h2>
+    <form id="registerForm">
+      <input type="text" id="name" name="name" placeholder="Ad Soyad" required />
+      <input type="text" id="city" name="city" placeholder="Şehir" required />
+      <select id="gender" name="gender" required>
+        <option value="">Cinsiyet Seç</option>
+        <option value="Erkek">Erkek</option>
+        <option value="Kadın">Kadın</option>
+      </select>
+      <input type="number" id="height" name="height" placeholder="Boy (cm)" required />
+      <input type="number" id="weight" name="weight" placeholder="Kilo (kg)" required />
+      <input type="url" id="photo" name="photo" placeholder="Profil Fotoğrafı URL (opsiyonel)" />
+      <button type="submit">Kaydet</button>
+    </form>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("registerForm");
+    const savedUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (savedUser) {
+      document.getElementById("name").value = savedUser.name || "";
+      document.getElementById("city").value = savedUser.city || "";
+      document.getElementById("gender").value = savedUser.gender || "";
+      document.getElementById("height").value = savedUser.height || "";
+      document.getElementById("weight").value = savedUser.weight || "";
+      document.getElementById("photo").value = savedUser.photo || "";
+    }
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const city = document.getElementById("city").value.trim();
+      const gender = document.getElementById("gender").value;
+      const height = document.getElementById("height").value.trim();
+      const weight = document.getElementById("weight").value.trim();
+      const photo = document.getElementById("photo").value.trim();
+
+      if (!name || !city || !gender || !height || !weight) {
+        alert("Lütfen tüm zorunlu alanları doldurun.");
+        return;
+      }
+
+      const user = {
+        name,
+        city,
+        gender,
+        height,
+        weight,
+        photo,
+        lastActive: new Date().toISOString()
+      };
+
+      try {
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        document.getElementById("message").textContent = "Kayıt başarılı!";
+        setTimeout(() => {
+          window.location.href = "profil.html";
+        }, 1500);
+      } catch (error) {
+        console.error("Kayıt hatası:", error);
+        alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+      }
+    });
+  </script>
+
+  <div style="text-align:center; margin-top: 40px;">
+    <p><a href="profil.html">→ Profil Sayfasına Git</a></p>
+    <p><a href="mesaj.html?alici=Ay%C5%9Fe%20Y%C4%B1ld%C4%B1z">→ Mesajlaşma Örneği</a></p>
+  </div>
+</body>
+</html>
